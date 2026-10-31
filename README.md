@@ -1,4 +1,5 @@
 # BrightLoopAutopilot1.0
+
 ## Subscription Management System
 
 ### Project Overview
@@ -98,20 +99,29 @@ BrightLoop Autopilot aims to solve these problems through an integrated subscrip
 ### Backend
 - Node.js
 - Express.js
-- Prisma ORM
-- Zod
-- dotenv
 
 ### Database
 - SQLite
+- Prisma ORM (Version 6.19.3)
+
+### Database Configuration
+- Database URL: `file:./dev.db`
+- Schema location: `backend/prisma/schema.prisma`
+
+### Development Ports
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:5000`
+
+### API Configuration
+- Backend API Base URL: `http://localhost:5000/api`
 
 ### Development Tools
 - Visual Studio Code
 - Git and GitHub
 
-### Application Ports
-- Frontend: 5173
-- Backend: 5000
+### Version Control
+- Main development branch: `main`
+- Regular progress pushes: Approximately hourly
 
 ### Project Structure
 
@@ -147,11 +157,10 @@ Refer to [API_CONTRACT.md](docs/API_CONTRACT.md) for the agreed API endpoints, r
 
 | Member | Responsibility |
 |---|---|
-| Member 1 | Frontend Development |
-| Member 2 | Backend Development |
-| Member 3 | Coordination, Documentation and Integration |
+| Member 1 | Backend Development and Billing Engine |
+| Member 2 | Frontend Development and UI |
+| Member 3 | Documentation, Integration Testing and Coordination |
 
 ### Project Status
 
 Currently under development as a hackathon project.
-

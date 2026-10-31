@@ -4,6 +4,8 @@
 
 BrightLoop Autopilot is a subscription management system that manages customers, plans, subscriptions, recurring billing, invoices and payments.
 
+The system provides a centralized platform for managing subscription business operations.
+
 ## 2. Technology Configuration
 
 | Component | Technology / Configuration |
@@ -13,7 +15,7 @@ BrightLoop Autopilot is a subscription management system that manages customers,
 | Frontend Port | 5173 |
 | Backend | Node.js + Express.js |
 | Backend Port | 5000 |
-| ORM | Prisma |
+| ORM | Prisma 6.19.3 |
 | Database | SQLite |
 | Validation | Zod |
 | Environment Variables | dotenv |
@@ -36,6 +38,13 @@ The backend currently plans to implement six models:
 4. Invoice
 5. InvoiceLine
 6. Payment
+
+### Database Configuration
+
+- Database: SQLite
+- ORM: Prisma 6.19.3
+- Database URL: `file:./dev.db`
+- Prisma schema location: `backend/prisma/schema.prisma`
 
 Detailed field definitions and relationships will be documented after confirmation from the backend developer.
 
@@ -71,7 +80,7 @@ Each endpoint must document:
 
 ## 6. Monetary Data Convention
 
-All monetary values must be stored and transferred as integer paise.
+All monetary amounts must be stored as integer paise.
 
 Examples:
 
@@ -81,9 +90,11 @@ Examples:
 | ₹560.00 | 56000 |
 | ₹649.00 | 64900 |
 
-The frontend must convert paise to INR for display.
+The frontend must convert paise into INR for display.
 
 The backend must perform monetary calculations using integer paise.
+
+The exact monetary field names and JSON representation must be confirmed during API integration.
 
 ## 7. Billing Rules
 
@@ -92,40 +103,45 @@ The backend must perform monetary calculations using integer paise.
 3. Invoice generation must use database transactions.
 4. Repeated billing runs must not create duplicate invoices for the same subscription and billing period.
 5. Partial payments must reduce the outstanding balance.
-6. When payments reach or exceed the invoice total, the invoice status becomes `PAID`.
+6. When the amount paid reaches or exceeds the invoice total, the invoice status becomes `PAID`.
 7. Payments are simulated; no real payment gateway is integrated.
 
 ## 8. Frontend and Backend Integration
 
-Frontend origin:
+### Application Configuration
 
-`http://localhost:5173`
-
-Backend origin:
-
-`http://localhost:5000`
-
-API base URL:
-
-`http://localhost:5000/api`
+- Frontend origin: `http://localhost:5173`
+- Backend origin: `http://localhost:5000`
+- API base URL: `http://localhost:5000/api`
 
 The backend must enable CORS for the frontend origin.
 
 All API communication must use consistent JSON structures.
 
+The frontend and backend developers must coordinate request and response formats before integration.
+
 ## 9. GitHub Workflow
 
-| Member | Branch | Responsibility |
-|---|---|---|
-| Member 1 | `backend-dev` | Backend and billing engine |
-| Member 2 | `frontend-dev` | Frontend and UI |
-| Member 3 | `innovation-dev` | Documentation, integration testing and coordination |
+All team members work directly on the `main` branch.
 
-- Members should push changes at hourly checkpoints.
-- Member 3 coordinates reviews and merges into `main`.
-- Members should avoid directly editing another member's assigned folders without coordination.
+| Member | Responsibility |
+|---|---|
+| Member 1 | Backend Development and Billing Engine |
+| Member 2 | Frontend Development and UI |
+| Member 3 | Documentation, Integration Testing and Coordination |
+
+### GitHub Guidelines
+
+- All development changes must be pushed to `main`.
+- Team members should push progress approximately every hour.
+- Coordinate before pushing shared changes.
+- Pull the latest changes before starting new work.
+- Avoid modifying another member's assigned folders without coordination.
+- Coordinate database schema changes and migrations to prevent conflicts.
 
 ## 10. Pending Confirmations
+
+The following details must be finalized during development:
 
 - Final request and response JSON schemas.
 - Database model fields and relationships.
@@ -133,10 +149,38 @@ All API communication must use consistent JSON structures.
 - Invoice and subscription status values.
 - Error response format.
 - Treatment of payments exceeding the invoice balance.
+- Exact monetary field names and API representation.
 - Scope of products, quotations, taxes, discounts and staff management.
+
+## 11. Database and Environment Security
+
+### Database Coordination
+
+- Coordinate schema changes with all team members.
+- Communicate migration changes before applying them.
+- Avoid conflicting database schema modifications.
+- Keep the Prisma schema in `backend/prisma/schema.prisma`.
+
+### Environment Security
+
+- Never commit `.env` files.
+- Never commit `node_modules`.
+- Keep sensitive configuration out of GitHub.
+- Maintain appropriate `.gitignore` rules.
+
+## 12. Frontend and Backend Communication
+
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:5000`
+- API prefix: `/api`
+- Frontend API Base URL: `http://localhost:5000/api`
+
+The frontend communicates with the backend through the agreed API endpoints.
+
+Both developers must maintain consistent request fields, response fields and data types.
 
 ---
 
-**Document Status:** Initial API contract based on the team's updated technical plan.
+**Document Status:** Initial API contract based on the team's updated technical configuration.
 
 **Project:** BrightLoop Autopilot 1.0
