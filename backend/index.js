@@ -10,6 +10,8 @@ const subscriptionRoutes = require("./src/routes/subscriptionRoutes");
 const billingRoutes = require("./src/routes/billingRoutes");
 const invoiceRoutes = require("./src/routes/invoiceRoutes");
 const dashboardRoutes = require("./src/routes/dashboardRoutes");
+const authRoutes = require("./src/routes/authRoutes");
+const errorHandler = require("./src/middleware/errorHandler");
 
 const app = express();
 
@@ -25,12 +27,14 @@ const PORT = process.env.PORT || 5000;
 
 // API Routes
 app.use("/api", healthRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api/customers", customerRoutes);
 app.use("/api/plans", planRoutes);
 app.use("/api/subscriptions", subscriptionRoutes);
 app.use("/api/billing", billingRoutes);
 app.use("/api/invoices", invoiceRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use(errorHandler);
 
 // Root endpoint
 app.get("/", (req, res) => {
@@ -53,3 +57,4 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
 });
+module.exports = app;
