@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id           Int            @id @default(autoincrement())
+  name         String
+  email        String         @unique
+  phone        String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  subscriptions Subscription[]
+}
+
+model Plan {
+  id            Int            @id @default(autoincrement())
+  name          String
+  description   String?
+  pricePaise    Int
+  billingPeriod String
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id            Int       @id @default(autoincrement())
+  customerId    Int
+  planId        Int
+  status        String    @default("ACTIVE")
+  startDate     DateTime  @default(now())
+  nextBillingAt DateTime
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  customer      Customer  @relation(fields: [customerId], references: [id])
+  plan          Plan      @relation(fields: [planId], references: [id])
+  invoices      Invoice[]
+}
+
+model Invoice {
+  id                Int           @id @default(autoincrement())
+  subscriptionId    Int
+  invoiceNumber     String        @unique
+  billingPeriodStart DateTime
+  billingPeriodEnd   DateTime
+  issueDate         DateTime      @default(now())
+  dueDate           DateTime
+  totalPaise        Int
+  status            String        @default("PENDING")
+  createdAt         DateTime      @default(now())
+
+  subscription      Subscription  @relation(fields: [subscriptionId], references: [id])
+  lines             InvoiceLine[]
+  payments          Payment[]
+
+  @@unique([subscriptionId, billingPeriodStart, billingPeriodEnd])
+}
+
+model InvoiceLine {
+  id          Int      @id @default(autoincrement())
+  invoiceId   Int
+  description String
+  quantity    Int      @default(1)
+  unitPricePaise Int
+  amountPaise Int
+
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+model Payment {
+  id             Int      @id @default(autoincrement())
+  invoiceId      Int
+  amountPaise    Int
+  paymentDate    DateTime @default(now())
+  method         String   @default("SIMULATED")
+  reference      String?  @unique
+  createdAt      DateTime @default(now())
+
+  invoice        Invoice  @relation(fields: [invoiceId], references: [id])
+}
